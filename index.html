@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Γ — Mosaïque Solitaire · Damso · Expérience immersive</title>
+<meta name="description" content="Expérience interactive dédiée à « Mosaïque Solitaire » de Damso — le clip en fond d'écran, l'histoire, le décryptage scène par scène, les chiffres et la mosaïque des références.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,500;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=3">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>Γ</text></svg>">
+</head>
+<body data-loaded="false">
+
+<!-- ══════════ PORTE D'ENTRÉE ══════════ -->
+<div id="gate" aria-label="Porte d'entrée de l'expérience">
+  <div class="gate__inner">
+    <div class="gate__hourglass" aria-hidden="true">
+      <svg viewBox="0 0 80 120" class="hg">
+        <defs>
+          <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#eaf2fb"/><stop offset="1" stop-color="#8fd6ff"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="#eaf2fb" stroke-width="3" stroke-linecap="round">
+          <path d="M14 6 H66"/><path d="M14 114 H66"/>
+          <path d="M16 6 C16 40 34 48 34 52 C34 56 16 62 16 96"/>
+          <path d="M64 6 C64 40 46 48 46 52 C46 56 64 62 64 96"/>
+        </g>
+        <g fill="url(#sand)">
+          <polygon class="hg__top" points="26,12 54,12 44,50 36,50" opacity=".9"/>
+          <rect class="hg__stream" x="39" y="52" width="2" height="16"/>
+          <polygon class="hg__bottom" points="40,70 54,108 26,108"/>
+        </g>
+      </svg>
+    </div>
+    <p class="gate__eyebrow mono">Γ · IPSÉITÉ · MMXVII</p>
+    <h1 class="gate__title">MOSAÏQUE<br><span>SOLITAIRE</span></h1>
+    <p class="gate__sub">Une expérience immersive dédiée au morceau de Damso.<br>Le clip, le son, l'histoire — dans le noir et la neige.</p>
+    <div class="gate__ctas">
+      <button id="enterBtn" class="gate__cta" type="button" data-enter="sound">
+        <span class="gate__cta-line"></span>
+        ENTRER AVEC LE SON
+        <span class="gate__cta-line"></span>
+      </button>
+      <button id="enterMutedBtn" class="gate__cta gate__cta--ghost" type="button" data-enter="mute">
+        ENTRER SANS LE SON
+      </button>
+    </div>
+    <p class="gate__hint mono">Le son démarre avec l'entrée · casque recommandé</p>
+  </div>
+  <div class="gate__noise" aria-hidden="true"></div>
+</div>
+
+<!-- ══════════ FOND VIDÉO (fichier local) ══════════ -->
+<div class="video-stage" aria-hidden="true">
+  <video id="videoCover" src="assets/mosaique-solitaire.mp4" preload="metadata" playsinline loop disablepictureinpicture></video>
+  <div class="video-stage__veil"></div>
+</div>
+
+<!-- ══════════ NEIGE ══════════ -->
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div id="cursor" class="cursor" aria-hidden="true"><div class="cursor__dot"></div></div>
+
+<!-- ══════════ NAVIGATION ══════════ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#hero" data-nav>
+    <span class="nav__gamma">Γ</span>
+    <span class="nav__brand-txt">MOSAÏQUE<i>SOLITAIRE</i></span>
+  </a>
+  <nav class="nav__links" aria-label="Navigation principale">
+    <a href="#histoire" data-nav>L'Histoire</a>
+    <a href="#clip" data-nav>Le Clip</a>
+    <a href="#fragments" data-nav>Fragments</a>
+    <a href="#chiffres" data-nav>Chiffres</a>
+    <a href="#mosaique" data-nav>Mosaïque</a>
+  </nav>
+  <div class="nav__right">
+    <button id="soundBtn" class="ctrl-btn" type="button" aria-label="Couper ou rétablir le son" aria-pressed="true">
+      <svg class="ic ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a8.5 8.5 0 0 1 0 12"/></svg>
+      <svg class="ic ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="16" y1="9" x2="22" y2="15"/><line x1="22" y1="9" x2="16" y2="15"/></svg>
+    </button>
+    <button id="theaterBtn" class="ctrl-btn" type="button" aria-label="Mode cinéma">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 21h12"/></svg>
+      <span class="mono">CINÉMA</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+  <div class="hero__frame" aria-hidden="true"></div>
+  <p class="hero__eyebrow mono reveal-line">DAMSO — IPSÉITÉ (2017) — CLIP OFFICIEL PAR M+F, 16.03.2018</p>
+  <h2 class="hero__title" aria-label="Mosaïque Solitaire">
+    <span class="ht__row"><span class="ht__word" data-split>MOSAÏQUE</span><span class="ht__gamma" aria-hidden="true">Γ</span></span>
+    <span class="ht__row ht__row--outline"><span class="ht__word" data-split>SOLITAIRE</span></span>
+  </h2>
+  <div class="hero__bottom">
+    <p class="hero__tag">Un tueur à gages traverse la ville sous la neige.<br>Un sablier s'écoule. <em>Le temps c'est de l'argent, la mort est au bout.</em></p>
+    <div class="hero__scroll mono" aria-hidden="true">
+      <span>SCROLL</span><span class="hero__scroll-bar"><i></i></span>
+    </div>
+  </div>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>MOSAÏQUE SOLITAIRE — DAMSO — Γ — DIAMANT CERTIFIÉ — 35 000 000 DE STREAMS — IPSÉITÉ — TUEUR À GAGES — SABLIER — NEIGE —&nbsp;</span>
+      <span>MOSAÏQUE SOLITAIRE — DAMSO — Γ — DIAMANT CERTIFIÉ — 35 000 000 DE STREAMS — IPSÉITÉ — TUEUR À GAGES — SABLIER — NEIGE —&nbsp;</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ L'HISTOIRE ══════════ -->
+<section class="histoire" id="histoire">
+  <div class="sec-head">
+    <span class="sec-head__num mono">01</span>
+    <h3 class="sec-head__title" data-split>L'HISTOIRE</h3>
+    <p class="sec-head__sub">D'Ipséité au clip glacial : genèse d'une mosaïque.</p>
+  </div>
+
+  <div class="chapters">
+    <article class="chap" data-chap>
+      <span class="chap__glyph" aria-hidden="true">Γ</span>
+      <div class="chap__body">
+        <p class="mono chap__kicker">CHAPITRE I — LA PISTE</p>
+        <h4>Une pierre de l'album-identité</h4>
+        <p>Le 28 avril 2017, Damso publie <strong>Ipséité</strong> — « l'ipséité », le caractère de ce qui est soi-même. Quatorze morceaux, tous précédés d'une lettre grecque. <strong>Γ (gamma)</strong>, la troisième : « Mosaïque Solitaire », cinq minutes d'introspection glacée produites par <strong>Pirates 8293 &amp; Double X</strong>, posée entre « B. #QuedusaalVie » et « Δ. Dieu ne ment jamais ».</p>
+        <p>L'album explore l'ego, la solitude du succès et la trahison. Ce titre en est le cœur sombre : être une <em>mosaïque</em> — mille éclats assemblés — mais <em>solitaire</em>, seul dans la galerie.</p>
+      </div>
+      <div class="chap__media" aria-hidden="true"><span>5:05</span></div>
+    </article>
+
+    <article class="chap chap--alt" data-chap>
+      <span class="chap__glyph" aria-hidden="true">✕</span>
+      <div class="chap__body">
+        <p class="mono chap__kicker">CHAPITRE II — LE CLIP</p>
+        <h4>Le tueur à gages sous la neige</h4>
+        <p>Presque un an après l'album, le 16 mars 2018, le réalisateur <strong>M+F</strong> livre un court-métrage polar : Damso y incarne un <strong>tueur à gages</strong>, transporté à l'arrière d'une berline noire à travers une ville ensevelie sous la neige. Une ambiance « glaciaire », entre polar et fantastique.</p>
+        <p>La presse décrit « Dems en proie à ses démons » : plans sombres, corps, et un <strong>sablier</strong> qui rythme le film du début à la fin — le temps qui s'écoule, la mort qui approche.</p>
+      </div>
+      <div class="chap__media" aria-hidden="true"><span>16.03.2018</span></div>
+    </article>
+
+    <article class="chap" data-chap>
+      <span class="chap__glyph" aria-hidden="true">△</span>
+      <div class="chap__body">
+        <p class="mono chap__kicker">CHAPITRE III — LE SENS</p>
+        <h4>Je pense, donc je suis seul</h4>
+        <p>Des analyses y relisent un écho à <strong>Descartes</strong> et au cogito : penser sa propre existence jusqu'à la paranoïa. Dans la mosaïque, chaque éclat est un visage, une trahison, un billet — assemblés en un portrait unique et brisé.</p>
+        <p>Le sablier rappelle l'arbitraire du compte à rebours : dans le contrat comme dans la vie, le temps ne se négocie pas. La solitude n'est plus une peine, c'est un état.</p>
+      </div>
+      <div class="chap__media" aria-hidden="true"><span>DESCARTES</span></div>
+    </article>
+
+    <article class="chap chap--alt" data-chap>
+      <span class="chap__glyph" aria-hidden="true">◈</span>
+      <div class="chap__body">
+        <p class="mono chap__kicker">CHAPITRE IV — LA CONSÉCRATION</p>
+        <h4>Un diamant dans la neige</h4>
+        <p>Single au succès immédiat — <strong>n°6 en France</strong> la semaine de sa sortie clip, <strong>n°14 en Belgique</strong> — le morceau ne quittera plus les classements : 46<sup>e</sup> du top annuel SNEP 2017, présent encore en 2018.</p>
+        <p>Il finira par être certifié <strong>Diamant</strong> en France, seuil des <strong>35 millions d'équivalents streams</strong>, et dépasse aujourd'hui les 121 millions d'écoutes sur YouTube Music. L'une des pierres angulaires du catalogue de Damso.</p>
+      </div>
+      <div class="chap__media" aria-hidden="true"><span>◆ DIAMANT</span></div>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════ LE CLIP DÉCRYPTÉ ══════════ -->
+<section class="clip" id="clip">
+  <div class="sec-head">
+    <span class="sec-head__num mono">02</span>
+    <h3 class="sec-head__title" data-split>LE CLIP DÉCRYPTÉ</h3>
+    <p class="sec-head__sub">Cliquez sur une séquence : le fond vidéo y saute. Temps approximatifs.</p>
+  </div>
+  <div class="scenes" id="scenes">
+    <button class="scene" type="button" data-time="0">
+      <span class="scene__t mono">≈ 0:00</span>
+      <span class="scene__glyph" aria-hidden="true">▞</span>
+      <h4>L'ouverture</h4>
+      <p>Le noir, le silence, la neige. Le sablier apparaît : le compte à rebours est lancé avant même le premier flow.</p>
+    </button>
+    <button class="scene" type="button" data-time="45">
+      <span class="scene__t mono">≈ 0:45</span>
+      <span class="scene__glyph" aria-hidden="true">▲</span>
+      <h4>La berline</h4>
+      <p>Damso à l'arrière d'une voiture noire, regard plongé dans la ville enneigée. Le contrat est en route.</p>
+    </button>
+    <button class="scene" type="button" data-time="140">
+      <span class="scene__t mono">≈ 2:20</span>
+      <span class="scene__glyph" aria-hidden="true">⛄</span>
+      <h4>La ville gelée</h4>
+      <p>Errance dans un décor polaire : grues, immeubles, vent. La solitude devient un décor cinématographique.</p>
+    </button>
+    <button class="scene" type="button" data-time="230">
+      <span class="scene__t mono">≈ 3:50</span>
+      <span class="scene__glyph" aria-hidden="true">†</span>
+      <h4>Les corps &amp; le pacte</h4>
+      <p>Le polar bascule dans le fantastique : morts au sol, visages masqués, devoirs accomplis. Le prix du succès.</p>
+    </button>
+    <button class="scene" type="button" data-time="285">
+      <span class="scene__t mono">≈ 4:45</span>
+      <span class="scene__glyph" aria-hidden="true">◇</span>
+      <h4>Le dernier grain</h4>
+      <p>Le sablier se vide. La boucle se referme : la mosaïque reste inachevée, l'homme reste seul.</p>
+    </button>
+  </div>
+</section>
+
+<!-- ══════════ FRAGMENTS (PAROLES) ══════════ -->
+<section class="fragments" id="fragments">
+  <div class="sec-head">
+    <span class="sec-head__num mono">03</span>
+    <h3 class="sec-head__title" data-split>FRAGMENTS</h3>
+    <p class="sec-head__sub">Des éclats de lecture, pas la partition entière. Paroles complètes : <a class="ext" href="https://genius.com/Damso-mosaique-solitaire-lyrics" target="_blank" rel="noopener">Genius ↗</a></p>
+  </div>
+  <div class="frag-grid">
+    <div class="frag frag--big">
+      <p class="frag__quote">« Mosaïque solitaire »</p>
+      <p class="frag__note">Le titre est un oxymore en deux mots : l'œuvre d'assemblage et l'absence d'autrui. Dans le refrain, il agit comme un sceau — on ne sort pas de la galerie.</p>
+    </div>
+    <div class="frag">
+      <p class="frag__k mono">THÈME — LA SOLITUDE</p>
+      <p class="frag__note">Être admiré et seul : le paradoxe du succès raconté au présent, sans auto-apitoiement. La mosaïque se contemple depuis l'extérieur.</p>
+    </div>
+    <div class="frag">
+      <p class="frag__k mono">THÈME — LE TEMPS</p>
+      <p class="frag__note">Le sablier du clip donne une image au flow : chaque bar est un grain qui tombe. Le temps est la seule dette qu'on ne rembourse pas.</p>
+    </div>
+    <div class="frag">
+      <p class="frag__k mono">THÈME — LA PARANOÏA</p>
+      <p class="frag__note">Autour du personnage, les visages se ressemblent tous. Fidélités fragiles, regards armés : on pense, donc on se méfie.</p>
+    </div>
+    <div class="frag">
+      <p class="frag__k mono">L'ÉCRITURE</p>
+      <p class="frag__note">Images froides, syntaxes coupées, Vocabulary élevé sans lourdeur : Damso écrit comme on range des lames — chaque mot affûté, jamais décoratif.</p>
+    </div>
+    <div class="frag frag--link">
+      <p class="frag__quote mono">LIRE LES PAROLES<br>COMPLÈTES ↗</p>
+      <a class="frag__cover" href="https://genius.com/Damso-mosaique-solitaire-lyrics" target="_blank" rel="noopener" aria-label="Paroles complètes sur Genius"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CHIFFRES ══════════ -->
+<section class="chiffres" id="chiffres">
+  <div class="sec-head">
+    <span class="sec-head__num mono">04</span>
+    <h3 class="sec-head__title" data-split>LES CHIFFRES</h3>
+    <p class="sec-head__sub">Le poids de la pierre Γ.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat__val" data-count="35" data-suffix=" M">0</span><span class="stat__lbl mono">ÉQUIVALENTS STREAMS<br>— CERTIFICATION DIAMANT (SNEP)</span></div>
+    <div class="stat"><span class="stat__val" data-count="6" data-prefix="N° ">0</span><span class="stat__lbl mono">TOP HEBDO SNEP FRANCE<br>SEMAINE DU CLIP</span></div>
+    <div class="stat"><span class="stat__val" data-count="14" data-prefix="N° ">0</span><span class="stat__lbl mono">ULTRATOP 50<br>BELGIQUE — WALLONIE</span></div>
+    <div class="stat"><span class="stat__val" data-count="46" data-prefix="N° ">0</span><span class="stat__lbl mono">TOP ANNUEL SNEP 2017<br>(138<sup>E</sup> EN 2018)</span></div>
+    <div class="stat stat--wide"><span class="stat__val" data-count="121" data-suffix=" M+">0</span><span class="stat__lbl mono">ÉCOUTES YOUTUBE MUSIC<br>DURÉE 5:06 — PROD. PIRATES 8293 &amp; DOUBLE X</span></div>
+  </div>
+</section>
+
+<!-- ══════════ MOSAÏQUE DES RÉFÉRENCES ══════════ -->
+<section class="mosaique" id="mosaique">
+  <div class="sec-head">
+    <span class="sec-head__num mono">05</span>
+    <h3 class="sec-head__title" data-split>LA MOSAÏQUE</h3>
+    <p class="sec-head__sub">Chaque tuile est une référence — survolez, retournez, assemblez.</p>
+  </div>
+  <div class="tiles" id="tiles">
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">Γ</span><span class="mono">MOSAÏQUE SOLITAIRE</span></div><div class="tile__face tile__back"><p>Piste 3 d'<strong>Ipséité</strong> (2017). La lettre gamma, troisième de l'alphabet grec, comme toutes les pistes de l'album.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">Α</span><span class="mono">NWAAR IS THE NEW BLACK</span></div><div class="tile__face tile__back"><p>Piste 1 et single d'ouverture d'Ipséité, dont la réédition de mars 2018 révélera six titres inédits.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">Δ</span><span class="mono">DIEU NE MENT JAMAIS</span></div><div class="tile__face tile__back"><p>Piste 4, produit par DSK On The Beat — l'autre colonne spirituelle de l'album, deux cases après Γ.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">Θ</span><span class="mono">MACARENA</span></div><div class="tile__face tile__back"><p>Piste 8, le tube léger d'Ipséité — l'exception ensoleillée d'un disque glacial.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">✕</span><span class="mono">92I RECORDS</span></div><div class="tile__face tile__back"><p>Le label de Booba qui signe Damso — avec Capitol &amp; Universal Music France pour la distribution.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">M+F</span><span class="mono">RÉALISATION</span></div><div class="tile__face tile__back"><p>Le duo derrière le clip de mars 2018 : berline noire, neige, sablier — un polar imagé comme une citation.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">⧗</span><span class="mono">LE SABLIER</span></div><div class="tile__face tile__back"><p>L'objet-témoin du clip : le temps qui coule du début à la fin, la mort qui s'approche grain par grain.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">❄</span><span class="mono">LA NEIGE</span></div><div class="tile__face tile__back"><p>Le décor et le ton : une ville blanche et froide, l'exact contraire du sang chaud du contrat.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">☰</span><span class="mono">DESCARTES</span></div><div class="tile__face tile__back"><p>Des essayistes relisent le morceau comme un cogito rap : penser jusqu'au doute, douter jusqu'à la paranoïa.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">◆</span><span class="mono">DIAMANT</span></div><div class="tile__face tile__back"><p>Certifié diamant en France : 35 millions d'équivalents streams pour la pierre la plus froide de l'album.</p></div></div></div>
+    <div class="tile" data-tilt><div class="tile__in"><div class="tile__face tile__front"><span class="tile__greek">ΒΕ</span><span class="mono">BRUXELLES → PARIS</span></div><div class="tile__face tile__back"><p>Le trajet du Bruxellois signé 92i : la Belgique le classe 14<sup>e</sup>, la France en fait un diamant.</p></div></div></div>
+    <div class="tile tile--cta"><div class="tile__in"><button class="tile__face tile__front" id="replayTile" type="button"><span class="tile__greek">▶</span><span class="mono">REVOIR LE CLIP<br>PLEIN ÉCRAN</span></button></div></div>
+  </div>
+</section>
+
+<!-- ══════════ PLAYER BAR ══════════ -->
+<div class="player" id="player">
+  <button id="playBtn" class="ctrl-btn ctrl-btn--big" type="button" aria-label="Lecture ou pause">
+    <svg class="ic ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="ic ic-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+  </button>
+  <div class="player__mid">
+    <div class="player__title mono">Γ. MOSAÏQUE SOLITAIRE — DAMSO</div>
+    <div class="player__bar" id="seekBar" role="slider" aria-label="Position de lecture" aria-valuemin="0" aria-valuemax="305" aria-valuenow="0" tabindex="0">
+      <div class="player__bar-fill" id="barFill"></div>
+      <div class="player__bar-knob" id="barKnob"></div>
+    </div>
+  </div>
+  <span class="player__time mono" id="timeLabel">0:00 / 5:05</span>
+</div>
+
+<!-- ══════════ MODE CINÉMA ══════════ -->
+<div class="theater" id="theater" aria-hidden="true">
+  <button id="theaterClose" class="ctrl-btn theater__close" type="button" aria-label="Fermer le mode cinéma">✕ <span class="mono">QUITTER LE CINÉMA</span></button>
+  <div class="theater__hint mono">← Le fond vidéo passe au premier plan →</div>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  <p class="footer__big" aria-hidden="true">Γ</p>
+  <p>Expérience fan-made non officielle — hommage interactif au morceau « Mosaïque Solitaire » de Damso (album <em>Ipséité</em>, 92i / Capitol Music France / Universal). Vidéo lue localement depuis ce site, à des fins privées. Paroles et musique © leurs auteurs et ayants droit — extraits cités à des fins d'analyse.</p>
+  <nav class="footer__links mono">
+    <a href="https://genius.com/Damso-mosaique-solitaire-lyrics" target="_blank" rel="noopener">PAROLES — GENIUS ↗</a>
+    <a href="https://fr.wikipedia.org/wiki/Mosa%C3%AFque_Solitaire" target="_blank" rel="noopener">WIKIPÉDIA ↗</a>
+    <a href="https://www.radiofrance.fr/mouv/damso-comment-comprendre-son-clip-mosaique-solitaire-video-9031607" target="_blank" rel="noopener">DÉCRYPTAGE — RADIO FRANCE ↗</a>
+  </nav>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.16/dist/hls.min.js"></script>
+<script src="js/main.js?v=3"></script>
+</body>
+</html>
